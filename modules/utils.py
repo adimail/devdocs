@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 
 
 def open_in_overleaf(latex_file):
-    with st.sidebar.expander(label="open in overleaf"):
+    with st.sidebar.expander(label="open in overleaf", expanded=True):
         components.html(
             f"""
             <style>
