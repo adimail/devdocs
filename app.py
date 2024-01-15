@@ -4,7 +4,6 @@ from modules.pages import about_page
 from modules.pages import document_uploader_page
 from streamlit_option_menu import option_menu
 
-
 st.set_page_config(
     page_title="Dev Docs",
     page_icon="assets/logo.png",
@@ -36,6 +35,29 @@ def main():
             menu_icon="file-earmark-code-fill",
             default_index=1
         )
+        overleaf_registration_page = "https://www.overleaf.com/register"
+
+        st.markdown(
+            f'''<a href="{overleaf_registration_page}" target="_blank">
+                <button
+                    style="
+                        width: 100%;
+                        background-color: #475caa;
+                        color: white;
+                        padding: 8px 16px;
+                        border-radius: 15px;
+                        border: none;
+                        text-align: center;
+                        text-decoration: none;
+                        display: inline-block;
+                        font-size: 16px;
+                        margin: 4px 2px;
+                        cursor: pointer;
+                    ">Create Overleaf account</button>
+            </a>''',
+            unsafe_allow_html=True
+        )
+        st.divider()
 
     if page == "Home":
         home_page()
