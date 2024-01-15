@@ -218,10 +218,11 @@ def about_page():
     st.header("TL;DR")
     st.markdown("""
     For our college assignments (I am doing engineering btw) we have to create pdf files of the programs we write and take printouts for the lab mannuals.
-    - I like writing code (good code) but I find the process of copying and pasting code blocks onto Google Docs and manually typesetting everything to be tedious.
-    - So I decided to build an application to automate this task, and I created dev docs.
-    - I think the audiance for this application is very nieche but this project was build for myself. 
+    - I like writing code (it's like poetry to me) but the process of copying and pasting code blocks onto Google Docs and manually typesetting everything is very tedious.
+    - So I decided to build an application to automate this task, and dev docs was created.
+    - Although the audiance for this application is very nieche but this project was build for myself as a treat.
     - I'd be very happy to know if someone else foud it useful
+    - Regards, [Aditya](adimail.github.io)
     """)
     st.title("What is LaTeX")
     st.markdown(
