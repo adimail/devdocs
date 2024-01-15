@@ -190,6 +190,31 @@ def document_uploader_page():
             h_center=h_center,
             fontsize=Codelines
         )
+    else:
+        with st.sidebar:
+            overleaf_registration_page = "https://www.overleaf.com/register"
+
+            st.markdown(
+                f'''<a href="{overleaf_registration_page}" target="_blank">
+                    <button
+                        style="
+                            width: 100%;
+                            background-color: #3da144;
+                            color: white;
+                            padding: 8px 16px;
+                            border-radius: 15px;
+                            border: none;
+                            text-align: center;
+                            text-decoration: none;
+                            display: inline-block;
+                            font-size: 16px;
+                            margin: 4px 2px;
+                            cursor: pointer;
+                        ">Create Overleaf account (Required)</button>
+                </a>''',
+                unsafe_allow_html=True
+            )
+            st.divider()
 
     if not unfilled_fields and uploaded_files:
 
