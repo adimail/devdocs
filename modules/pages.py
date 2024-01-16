@@ -87,6 +87,8 @@ def document_uploader_page():
     user_file_names = []
     user_file_languages = []
 
+    checked_count = 0
+
     uploaded_files = st.file_uploader(
         "Choose files", type=["py", "cpp", "js", "c", "ts", "go"], accept_multiple_files=True)
 
@@ -104,6 +106,13 @@ def document_uploader_page():
                         tl_label = col1.checkbox("Top left", value=True)
                         tc_label = col2.checkbox("Center", value=True)
                         tr_label = col3.checkbox("Top right")
+
+                        if tl_label:
+                            checked_count += 1
+                        if tc_label:
+                            checked_count += 1
+                        if tr_label:
+                            checked_count += 1
 
                     with st.container():
                         col1, col2, col3 = st.columns(3)
@@ -137,7 +146,8 @@ def document_uploader_page():
                                 "Position of page numbers",
                                 ["Bottom Left", "Top Left", "Center",
                                     "Bottom right", "Disabled"],
-                                index=1 if pagenumber else 4,
+                                # index=1 if pagenumber else 4,
+                                index=4,
                                 disabled=True
                             )
 
@@ -149,7 +159,15 @@ def document_uploader_page():
                                 index=1,
                             )
 
+                    st.write(
+                        "Note: If you want to decrease the font size, increase the number of line and vice versa")
+                    st.write(
+                        "Font size is inversely proportunal to maximum number of lines")
         st.markdown(" --- ")
+
+        if checked_count == 0:
+            st.sidebar.warning(
+                "It is recemmonded to include content in the page header as a blank header may not appear aesthetically pleasing imo, unless you intend to write on it manually 🙄🤷‍♀️")
 
         if tl_label and not h_top_left:
             unfilled_fields.append("Top Left label")
@@ -159,11 +177,14 @@ def document_uploader_page():
             unfilled_fields.append("Top Right label")
 
         if unfilled_fields:
-            st.sidebar.warning("Please fill in the following fields:")
-            st.sidebar.markdown(
-                "\n".join([f"- {field}" for field in unfilled_fields]), unsafe_allow_html=True)
+            with st.sidebar.container():
+                warning_message = "Please fill in the following fields to proceed:\n"
+                warning_message += "\n".join(
+                    [f"- {field}" for field in unfilled_fields])
+                st.warning(warning_message)
 
         st.subheader("Uploaded Files")
+        st.write(f'Length of unfilled fields: {len(unfilled_fields)}')
 
         columns = st.columns(2)
 
@@ -215,32 +236,30 @@ def document_uploader_page():
                 unsafe_allow_html=True
             )
             st.divider()
+            st.write("No files found")
 
+    pagebtn = False
     if not unfilled_fields and uploaded_files:
-
-        st.divider()
-
-        with st.expander(label="View your Latex code", expanded=False):
+        ready_to_convert = True
+        with st.expander(label="Generated Latex code for", expanded=True):
+            pagebtn = st.button("Convert the document to PDF on Overleaf")
             st.code(latex_code, language="latex", line_numbers=True)
-
         st.sidebar.success("Data is ready to be processed")
-        btn = st.sidebar.button("Convert to PDF")
-        if btn:
-            open_in_overleaf(latex_code)
-
-        st.sidebar.write(f"- Number of Files: {len(uploaded_files)}")
 
     else:
-        st.sidebar.write(
-            "Upload files and fill the details to proceed further")
-        st.sidebar.button("Convert to PDF", disabled=True)
+        ready_to_convert = False
+
+    btn = st.sidebar.button("Convert to PDF", disabled=not ready_to_convert)
+
+    if btn or pagebtn:
+        open_in_overleaf(latex_code)
 
 
 def about_page():
     st.title("About")
     st.divider()
 
-    st.header("TL;DR")
+    st.title("TL;DR")
     st.markdown("""
     **For our college assignments (I am doing engineering btw) we have to create pdf files of the programs we write and take printouts for the lab mannuals.**  
     - I like writing code (it's like poetry to me) but the process of copying and pasting code blocks onto Google Docs and manually typesetting everything is very tedious.

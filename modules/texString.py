@@ -16,6 +16,16 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
     major_list = list(zip(codes, names, languages))
 
     head = r'''
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%            ____               ____
+%           |  _ \  _____   __ |  _ \  ___   ___
+%           | | | |/ _ \ \ / / | | | |/ _ \ / __|
+%           | |_| |  __/\ V /  | |_| | (_) | (__
+%           |____/ \___| \_/   |____/ \___/ \___|
+%  Made with love by your friendly neighborhood spider man
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \documentclass{article}
 \usepackage[margin=0.68in]{geometry}
 \usepackage{minted}
@@ -26,6 +36,8 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
 \usemintedstyle{colorful}
 \pagestyle{fancy}
 \fancyhf{}
+
+% Header content goes here
 \lhead{\vspace{8pt} ''' + f"{h_topleft}" + r'''}
 \chead{\vspace{16pt}\fontsize{16}{18}\selectfont ''' + f"{h_center}" + r'''}
 \rhead{\vspace{8pt} ''' + f"{h_topright}" + r'''}
@@ -34,6 +46,13 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \begin{document}
+
+%   If you would like to give numbers to each section, 
+%   remove the aestrick (*) after each section.
+%   
+%   For example: 
+%      \section*{Title with number}
+%      \section{Title without number}
 '''
 
     template_string = ""
@@ -41,7 +60,7 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
     for element in major_list:
         template_string += r'''
 \section*{''' + f"{element[1]}" + r'''}
-\begin{minted}[bgcolor=backcolour,linenos,frame=none,fontsize=''' + fontsize + r''']{''' + f"{element[2]}" + r'''}
+\begin{minted}[bgcolor=backcolour,linenos,frame=none,fontsize=''' + fontsize + r''',breaklines]{''' + f"{element[2]}" + r'''}
 ''' + f"{element[0]}" + r'''
 \end{minted}
 \newpage
