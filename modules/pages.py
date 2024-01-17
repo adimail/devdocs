@@ -349,6 +349,6 @@ def about_page():
 
     with st.container():
         col1, col2 = st.columns(2)
-        col1.write('**Name:** [Aditya Godse](adimail.github.io)')
+        col1.write('**Name:** [Aditya Godse](https://adimail.github.io)')
         col1.write(
             '**Contact:**    adimail2404@gmail.com')
