@@ -1,22 +1,28 @@
-def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center=None, h_topright=None, fontsize=None, pagenumbers=False):
+def generateLatexCode(codes=[], names=[], languages=[], section_info=[], style="helvet",  h_topleft=None, h_center=None, h_topright=None, fontsize=None, pagenumbers=False):
 
-    if fontsize == 52:
-        fontsize = ''
-    elif fontsize == 69:
-        fontsize = '\\footnotesize'
-    elif fontsize == 60:
-        fontsize = '\\small'
-    elif fontsize == 82:
-        fontsize = '\\scriptsize'
-    elif fontsize == 110:
-        fontsize = '\\tiny'
-    else:
-        fontsize = ''
+    fontsize_dict = {
+        52: '',
+        69: '\\footnotesize',
+        60: '\\small',
+        82: '\\scriptsize',
+        110: '\\tiny'
+    }
 
-    major_list = list(zip(codes, names, languages))
+    fontstyle_dict = {
+        'Helvetica (Sans-serif)': 'helvet',
+        'Times New Roman (Serif)': 'times',
+    }
+
+    style = fontstyle_dict[style]
+    fontsize = fontsize_dict[fontsize]
+    major_list = list(zip(codes, names, languages, section_info))
+
+    comment = "\n"
+    if style == "times":
+        comment = "\n%"
 
     head = r'''
-
+            
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %            ____               ____
 %           |  _ \  _____   __ |  _ \  ___   ___
@@ -32,6 +38,11 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
 \usepackage{xcolor}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
+
+\usepackage{''' + f'{style}' + r'''}'''
+    head += comment
+    head += r'''\renewcommand{\rmdefault}{\sfdefault}
+% You can experiment with fonts by commenting out the above line
 
 \usemintedstyle{colorful}
 \pagestyle{fancy}
@@ -58,9 +69,12 @@ def generateLatexCode(codes=[], names=[], languages=[], h_topleft=None, h_center
     template_string = ""
 
     for element in major_list:
-        template_string += r'''
-\section*{''' + f"{element[1]}" + r'''}
-\begin{minted}[bgcolor=backcolour,linenos,frame=none,fontsize=''' + fontsize + r''',breaklines]{''' + f"{element[2]}" + r'''}
+        template_string += r'''\section*{''' + f"{element[1]}" + '}\n'
+        template_string += element[3]
+        template_string += '\n'
+        template_string += r'''\begin{minted}[bgcolor=backcolour,linenos,frame=none,fontsize='''
+        template_string += fontsize
+        template_string += r''',breaklines]{''' + f"{element[2]}" + r'''}
 ''' + f"{element[0]}" + r'''
 \end{minted}
 \newpage

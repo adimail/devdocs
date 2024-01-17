@@ -50,7 +50,7 @@ def home_page():
     """)
 
     st.markdown("""
-        Hiya Stranger! Thank you for visiting.
+        Hiya Stranger! Thank you for visiting. A running log of my development journey of DevDocs
                     
         13 Jan 2024:
         - I've been searching for an online compiler for LaTeX documents to render code into PDF format, but unfortunately, I couldn't find one.
@@ -71,6 +71,14 @@ def home_page():
             - **MacTeX** - Redistribution of TeX Live for macOS
             - **teTeX** - For Linux and other UNIX-like systems; it is no longer actively maintained
             - **proTeXt** - Based on MiKTeX
+        ---
+        17 Jan 2024:
+        - Current features:
+            - Read source code from python, C/CPP, JavaScript, TypeScript, Golang 
+            - generate LaTeX code for PDF
+            - Modify Header contents
+            - Change font size and styles
+            - Add description to the programs
     """)
 
 
@@ -81,20 +89,23 @@ def document_uploader_page():
     h_top_left = ""
     h_center = ""
     h_top_right = ""
+    fontstyle = "helvet"
     Codelines = 52
 
     user_file_codes = []
     user_file_names = []
     user_file_languages = []
+    user_section_info = []
 
     checked_count = 0
 
     uploaded_files = st.file_uploader(
-        "Choose files", type=["py", "cpp", "js", "c", "ts", "go"], accept_multiple_files=True)
+        "Choose files", type=["py", "cpp", "js", "c", "ts", "go", "rs"], accept_multiple_files=True)
 
     unfilled_fields = []
 
     if uploaded_files:
+        info_image = "info_helvet.jpg"
         with st.expander("Customize your PDF", expanded=True):
             header = True
             if header:
@@ -124,18 +135,29 @@ def document_uploader_page():
                         h_top_right = col3.text_input(
                             "Suggested: Roll Number/date ", disabled=not tr_label)
 
-                st.image('assets/info.png',
+                    with st.container():
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            fontstyle = st.selectbox(
+                                "Choose your font style",
+                                [
+                                    "Helvetica (Sans-serif)",  # helvet
+                                    "Times New Roman (Serif)",  # times
+                                ],
+                                index=0,
+                            )
+
+                            if fontstyle == "Times New Roman (Serif)":
+                                info_image = "info_times.png"
+                            else:
+                                info_image = "info_helvet.png"
+
+                st.image(f'assets/{info_image}',
                          caption='Position of header contents')
 
             with st.container(border=True):
                 st.write(
                     "Additional Features    :")
-                with st.container():
-                    col1, col2 = st.columns(2)
-                    pagenumber = col1.checkbox(
-                        "Page Numbers (Currently unavailable)")
-                    col2.markdown(
-                        "The page title is the file name by default. Change the title in [uploaded files](#uploaded-files) tab")
 
                 with st.container():
                     col1, col2 = st.columns(2)
@@ -143,7 +165,7 @@ def document_uploader_page():
                     with col1:
                         with st.container(border=True):
                             pagenumberposition = st.radio(
-                                "Position of page numbers",
+                                "Position of page numbers (Currently unavailable) ",
                                 ["Bottom Left", "Top Left", "Center",
                                     "Bottom right", "Disabled"],
                                 # index=1 if pagenumber else 4,
@@ -159,10 +181,6 @@ def document_uploader_page():
                                 index=1,
                             )
 
-                    st.write(
-                        "Note: If you want to decrease the font size, increase the number of line and vice versa")
-                    st.write(
-                        "Font size is inversely proportunal to maximum number of lines")
         st.markdown(" --- ")
 
         if checked_count == 0:
@@ -195,7 +213,13 @@ def document_uploader_page():
                 edited_name = st.text_input(
                     f"Title of the program {i}", value=file.name)
 
+                section_info = st.text_area(
+                    f"description for the program: ", value=" ",
+                    key=f"section_info_{i}",
+                )
+
                 user_file_names.append(edited_name)
+                user_section_info.append(section_info)
 
                 language = get_file_language(file.name)
                 st.code(file_contents, language=language, line_numbers=True)
@@ -209,8 +233,11 @@ def document_uploader_page():
             h_topleft=h_top_left,
             h_topright=h_top_right,
             h_center=h_center,
-            fontsize=Codelines
+            fontsize=Codelines,
+            section_info=user_section_info,
+            style=fontstyle
         )
+
     else:
         with st.sidebar:
             overleaf_registration_page = "https://www.overleaf.com/register"
